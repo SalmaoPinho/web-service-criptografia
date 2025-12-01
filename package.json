@@ -1,22 +1,21 @@
 {
-  "name": "middleware-legado",
+  "name": "webteste",
   "version": "1.0.0",
-  "description": "Middleware REST para sistema legado XML",
-  "main": "src/app.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "start": "node src/app.js",
-    "dev": "nodemon src/app.js",
-    "legacy": "node src/simulators/legacySystem.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2",
-    "xml2js": "^0.6.2",
-    "crypto": "^1.0.1",
-    "jsonwebtoken": "^9.0.2",
-    "helmet": "^7.1.0",
-    "https": "^1.0.0"
-  },
-  "devDependencies": {
-    "nodemon": "^3.0.1"
+    "axios": "^1.13.2",
+    "body-parser": "^2.2.1",
+    "body-parser-xml": "^2.0.5",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "xml2js": "^0.6.2"
   }
 }

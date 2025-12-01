@@ -1,0 +1,87 @@
+# Middleware Web Service - Explicação do Projeto
+
+Este projeto implementa um Middleware Web Service que atua como uma ponte entre clientes externos (REST/JSON) e um sistema legado simulado (XML).
+
+## Arquitetura
+
+O projeto é dividido em dois componentes principais:
+
+1.  **Middleware (Porta 3000)**:
+    - Recebe requisições REST (JSON) dos clientes.
+    - Realiza autenticação via Token (Bearer Token).
+    - Criptografa dados sensíveis (CPF) usando AES-256-CBC.
+    - Converte os dados para XML.
+    - Envia para o Sistema Legado.
+    - Recebe a resposta XML, descriptografa e retorna JSON para o cliente.
+
+2.  **Sistema Legado Simulado (Porta 3001)**:
+    - Recebe requisições XML.
+    - Armazena os dados (em memória).
+    - Retorna respostas em XML.
+
+## Estrutura de Pastas
+
+- `src/middleware/`: Código fonte do Middleware.
+    - `index.js`: Ponto de entrada da aplicação.
+    - `routes.js`: Definição das rotas da API (/api/clientes).
+    - `services/`: Serviços auxiliares.
+        - `cryptoService.js`: Lógica de criptografia/descriptografia.
+        - `xmlService.js`: Conversão JSON <-> XML.
+        - `legacyClient.js`: Cliente HTTP para comunicação com o legado.
+- `src/legacy/`: Código fonte do Sistema Legado Simulado.
+    - `server.js`: Servidor simples que simula o legado.
+
+## Como Executar
+
+1.  Instale as dependências:
+    ```bash
+    npm install
+    ```
+    *Se der erro no PowerShell, tente:* `cmd /c npm install`
+
+2.  Inicie o Sistema Legado (em um terminal):
+    ```bash
+    node src/legacy/server.js
+    ```
+
+3.  Inicie o Middleware (em outro terminal):
+    ```bash
+    node src/middleware/index.js
+    ```
+
+## Como Testar
+
+Utilize o Postman, Insomnia ou curl.
+
+### 1. Cadastrar Cliente (POST)
+
+**URL**: `http://localhost:3000/api/clientes`
+**Headers**:
+- `Content-Type`: `application/json`
+- `Authorization`: `Bearer my-secret-token`
+
+**Body**:
+```json
+{
+    "nome": "Samuel",
+    "email": "samuel@teste.com",
+    "cpf": "123.456.789-00"
+}
+```
+
+### 2. Consultar Cliente (GET)
+
+**URL**: `http://localhost:3000/api/clientes/{id}` (substitua {id} pelo ID retornado no cadastro)
+**Headers**:
+- `Authorization`: `Bearer my-secret-token`
+
+## Criptografia
+
+Foi utilizado o algoritmo **AES-256-CBC**.
+- A chave e o IV (Vetor de Inicialização) estão fixos no código (`src/middleware/services/cryptoService.js`) apenas para fins didáticos deste exercício. Em produção, devem ser variáveis de ambiente.
+- O campo `CPF` é criptografado antes de ser enviado ao legado e descriptografado ao ser lido.
+
+## Segurança
+
+- **Autenticação**: Implementada via Header `Authorization`.
+- **HTTPS**: Para produção, recomenda-se o uso de um Proxy Reverso (Nginx) ou configurar o Express com certificados SSL/TLS.
